@@ -11,23 +11,26 @@ class MangaCore {
   };
 
   Future<String> getAppDir() async {
-    final appDocDir = await getApplicationDocumentsDirectory();
+    Directory appDocDir = await getApplicationDocumentsDirectory();
     return appDocDir.path;
   }
 
   Future<File> getDataFile() async {
-    return new File('${getAppDir()}/data.json');
+    String appDir = await getAppDir();
+    return new File('$appDir/data.json');
   }
 
-  Future<void> readData() async {
+  Future<void> readSavedData() async {
     try {
       File dataFile = await getDataFile();
       String data = await dataFile.readAsString();
       this.appData = convert.jsonDecode(data);
-    } catch (e) {}
+    } catch (e) {
+      await this.fetchMangaUpdate();
+    }
   }
 
-  Future<void> writeData() async {
+  Future<void> saveData() async {
     File dataFile = await getDataFile();
     await dataFile.writeAsString(convert.jsonEncode(this.appData));
   }
@@ -38,12 +41,30 @@ class MangaCore {
     if (response.statusCode == 200) {
       final json = convert.jsonDecode(response.body);
       this.appData["mangaList"] = json["manga"];
+      await this.saveData();
     }
-
-    this.writeData();
   }
 
-  List<Map<String, dynamic>> searchManga(String query) {
+  Future<void> trackManga(String title) async {
+    dynamic manga = this
+        .appData["mangaList"]
+        .where((entry) => entry["t"] == title)
+        .toList()[0];
+
+    this.appData["savedManga"].add(manga);
+    await this.saveData();
+  }
+
+  Future<void> untrackManga(String title) async {
+    this.appData["savedManga"] = this
+        .appData["savedManga"]
+        .where((entry) => entry["t"] != title)
+        .toList();
+
+    await this.saveData();
+  }
+
+  List<dynamic> searchManga(String query) {
     return this
         .appData["mangaList"]
         .where((entry) => entry["t"].contains(query))

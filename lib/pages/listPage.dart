@@ -13,7 +13,13 @@ class ListPageState extends State<ListPage> {
   @override
   void initState() {
     super.initState();
-    coreInstance = new MangaCore();
+
+    MangaCore core = new MangaCore();
+    core.readSavedData().then((void _) {
+      setState(() {
+        this.coreInstance = core;
+      });
+    });
   }
 
   @override
@@ -33,17 +39,27 @@ class ListPageState extends State<ListPage> {
           );
         }),
       ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SearchPage(coreInstance: this.coreInstance),
+      floatingActionButton: this.coreInstance == null
+          ? new FloatingActionButton(
+              onPressed: () {},
+              child: new Container(
+                child: new CircularProgressIndicator(
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            )
+          : new FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                    builder: (context) =>
+                        new SearchPage(coreInstance: this.coreInstance),
+                  ),
+                );
+              },
+              child: new Icon(Icons.add),
             ),
-          );
-        },
-        child: new Icon(Icons.add),
-      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

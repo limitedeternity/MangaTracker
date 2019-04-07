@@ -22,19 +22,22 @@ class SearchPageState extends State<SearchPage> {
       placeholder: "Search",
       getResults: (String query) async {
         List materialResult = [];
-        widget.coreInstance.searchManga(query).forEach(
-              (Map<String, dynamic> mangaObject) => materialResult.add(
-                    new MaterialSearchResult<String>(
-                      value: mangaObject["t"],
-                      text: mangaObject["t"],
-                      icon: Icons.library_books,
-                    ),
-                  ),
-            );
+        List result = this.widget.coreInstance.searchManga(query);
+
+        for (var mangaObject in result) {
+          materialResult.add(
+            new MaterialSearchResult<String>(
+              value: mangaObject["t"],
+              text: mangaObject["t"],
+              icon: Icons.library_books,
+            ),
+          );
+        }
+
         return materialResult;
       },
-      onSelect: (String selected) {
-        print(selected);
+      onSelect: (String selected) async {
+        await this.widget.coreInstance.trackManga(selected);
       },
     );
   }
