@@ -1,1 +1,3 @@
-# MangaTracker
+# manga_tracker
+
+> Track manga chapters
