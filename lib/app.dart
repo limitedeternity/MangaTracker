@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manga_tracker/pages/listPage.dart';
 
 class Application extends StatefulWidget {
   @override
@@ -13,13 +14,6 @@ class ApplicationState extends State<Application> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("MangaTracker"),
-      ),
-      body: new Center(
-        child: new CircularProgressIndicator(),
-      ),
-    );
+    return new ListPage();
   }
 }
