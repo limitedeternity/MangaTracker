@@ -20,14 +20,16 @@ class MangaCore {
     return new File('$appDir/data.json');
   }
 
-  Future<void> readSavedData() async {
+  Future<void> getData() async {
     try {
       File dataFile = await getDataFile();
       String data = await dataFile.readAsString();
       this.appData = convert.jsonDecode(data);
     } catch (e) {
-      await this.fetchMangaUpdate();
+      /* */
     }
+
+    await this.fetchMangaUpdate();
   }
 
   Future<void> saveData() async {
@@ -71,21 +73,15 @@ class MangaCore {
         .toList();
   }
 
-  Future<dynamic> getLatestChapter(Map<String, dynamic> mangaObject) async {
-    final response = await http
-        .get("https://www.mangaeden.com/api/manga/${mangaObject['i']}");
+  Future<dynamic> getLatestChapter(String mangaId) async {
+    final response =
+        await http.get("https://www.mangaeden.com/api/manga/$mangaId");
 
     if (response.statusCode == 200) {
       final json = convert.jsonDecode(response.body);
-      return json[0][0];
+      return json["chapters"][0][0];
     } else {
       return null;
     }
-  }
-
-  dynamic getMangaCover(Map<String, dynamic> mangaObject) {
-    return mangaObject['im']
-        ? "https://cdn.mangaeden.com/mangasimg/${mangaObject['im']}"
-        : null;
   }
 }

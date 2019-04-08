@@ -18,27 +18,31 @@ class SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialSearch<String>(
-      placeholder: "Search",
-      getResults: (String query) async {
-        List materialResult = [];
-        List result = this.widget.coreInstance.searchManga(query);
+    return new Scaffold(
+      body: new MaterialSearch<String>(
+        placeholder: "Search",
+        getResults: (String query) async {
+          List<MaterialSearchResult<String>> materialResult = [];
+          List<dynamic> result = this.widget.coreInstance.searchManga(query);
 
-        for (var mangaObject in result) {
-          materialResult.add(
-            new MaterialSearchResult<String>(
-              value: mangaObject["t"],
-              text: mangaObject["t"],
-              icon: Icons.library_books,
-            ),
-          );
-        }
+          for (var mangaObject in result) {
+            materialResult.add(
+              new MaterialSearchResult<String>(
+                value: mangaObject["t"],
+                text: mangaObject["t"],
+                icon: Icons.library_books,
+              ),
+            );
+          }
 
-        return materialResult;
-      },
-      onSelect: (String selected) async {
-        await this.widget.coreInstance.trackManga(selected);
-      },
+          return materialResult;
+        },
+        onSelect: (dynamic selected) {
+          this.widget.coreInstance.trackManga(selected).then((void _) {
+            Navigator.pop(context);
+          });
+        },
+      ),
     );
   }
 }

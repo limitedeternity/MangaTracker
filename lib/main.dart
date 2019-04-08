@@ -9,8 +9,8 @@ class MangaTracker extends StatelessWidget {
     return new MaterialApp(
       title: "MangaTracker",
       theme: new ThemeData(
-        primaryColor: Colors.blue,
-        accentColor: Colors.blueAccent,
+        primaryColor: Colors.yellow,
+        accentColor: Colors.yellowAccent,
       ),
       debugShowCheckedModeBanner: false,
       home: new Application(),
