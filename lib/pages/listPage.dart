@@ -16,7 +16,7 @@ class ListPageState extends State<ListPage> {
     super.initState();
 
     MangaCore core = new MangaCore();
-    core.getData().then((void _) {
+    core.readSavedData().then((void _) {
       setState(() {
         this.coreInstance = core;
       });
@@ -47,8 +47,10 @@ class ListPageState extends State<ListPage> {
                 alignment: Alignment.topCenter,
                 child: new Container(
                   padding: const EdgeInsets.all(15.0),
-                  child: const Text(
-                    "You are not tracking any manga.\nAdd any using button below.",
+                  child: new Text(
+                    this.coreInstance == null
+                        ? "Loading..."
+                        : "You are not tracking any manga.\nAdd any using button below.",
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 20.0,
@@ -95,7 +97,7 @@ class ListPageState extends State<ListPage> {
                           ),
                         ),
                         title: new Text(
-                          this.coreInstance.appData["savedManga"][index]["t"],
+                          this.coreInstance.appData["savedManga"][index],
                           style: new TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -107,18 +109,26 @@ class ListPageState extends State<ListPage> {
                               padding: const EdgeInsets.only(top: 20.0),
                             ),
                             new FutureBuilder<dynamic>(
-                              future: this.coreInstance.getLatestChapter(this
-                                  .coreInstance
-                                  .appData["savedManga"][index]["i"]),
+                              key: new Key(
+                                this.coreInstance.appData["savedManga"][index],
+                              ),
+                              future: this.coreInstance.getLatestChapter(
+                                    this.coreInstance.searchManga(this
+                                        .coreInstance
+                                        .appData["savedManga"][index])[0]["i"],
+                                  ),
                               builder: (
                                 BuildContext context,
                                 AsyncSnapshot<dynamic> snapshot,
                               ) {
-                                int releaseDateMS =
-                                    (this.coreInstance.appData['savedManga']
-                                                [index]['ld'] *
-                                            1000)
-                                        .toInt();
+                                int releaseDateMS = (this
+                                            .coreInstance
+                                            .searchManga(this
+                                                    .coreInstance
+                                                    .appData["savedManga"]
+                                                [index])[0]["ld"] *
+                                        1000)
+                                    .toInt();
 
                                 DateTime releaseDateTime =
                                     new DateTime.fromMillisecondsSinceEpoch(
@@ -132,24 +142,25 @@ class ListPageState extends State<ListPage> {
                                 switch (snapshot.connectionState) {
                                   case ConnectionState.waiting:
                                     return new Text(
-                                      "<...>",
-                                      style: new TextStyle(color: Colors.white),
+                                      "Chapter ...",
+                                      style: new TextStyle(
+                                        color: Colors.yellowAccent,
+                                      ),
                                     );
                                   default:
-                                    if (snapshot.hasData)
-                                      return new Text(
-                                        "Chapter ${snapshot.data}",
-                                        style: new TextStyle(
-                                          color: Colors.yellowAccent,
-                                        ),
-                                      );
-                                    else
-                                      return new Text(
-                                        "$releaseDateReadable",
-                                        style: new TextStyle(
-                                          color: Colors.yellowAccent,
-                                        ),
-                                      );
+                                    return snapshot.hasData
+                                        ? new Text(
+                                            "Chapter ${snapshot.data}",
+                                            style: new TextStyle(
+                                              color: Colors.yellowAccent,
+                                            ),
+                                          )
+                                        : new Text(
+                                            "$releaseDateReadable",
+                                            style: new TextStyle(
+                                              color: Colors.yellowAccent,
+                                            ),
+                                          );
                                 }
                               },
                             ),
@@ -162,9 +173,8 @@ class ListPageState extends State<ListPage> {
                             size: 30.0,
                           ),
                           onTap: () {
-                            this.coreInstance.untrackManga(this
-                                .coreInstance
-                                .appData["savedManga"][index]["t"]);
+                            this.coreInstance.untrackManga(
+                                this.coreInstance.appData["savedManga"][index]);
                             setState(() {});
                           },
                         ),
