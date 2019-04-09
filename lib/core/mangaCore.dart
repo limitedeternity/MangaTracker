@@ -32,16 +32,23 @@ class MangaCore {
 
     if (!dataFileExists) {
       await this.createDataFile();
-    } else {
-      String data = await dataFile.readAsString();
-      this.appData = Map<String, List<dynamic>>.from(convert.jsonDecode(data));
+      await this.fetchMangaUpdate();
+      return;
     }
 
-    await this.fetchMangaUpdate();
+    String data = await dataFile.readAsString();
+    this.appData = Map<String, List<dynamic>>.from(convert.jsonDecode(data));
+
+    try {
+      await this.fetchMangaUpdate();
+    } catch (e) {
+      return;
+    }
   }
 
   Future<void> fetchMangaUpdate() async {
-    final response = await http.get("https://www.mangaeden.com/api/list/0/");
+    http.Response response =
+        await http.get("https://www.mangaeden.com/api/list/0/");
 
     if (response.statusCode == 200) {
       final json = convert.jsonDecode(response.body);
