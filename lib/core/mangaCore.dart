@@ -32,12 +32,12 @@ class MangaCore {
 
     if (!dataFileExists) {
       await this.createDataFile();
-      await this.fetchMangaUpdate();
     } else {
       String data = await dataFile.readAsString();
       this.appData = Map<String, List<dynamic>>.from(convert.jsonDecode(data));
-      this.fetchMangaUpdate();
     }
+
+    await this.fetchMangaUpdate();
   }
 
   Future<void> fetchMangaUpdate() async {
