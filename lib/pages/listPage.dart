@@ -17,7 +17,7 @@ class ListPageState extends State<ListPage> {
 
     MangaCore core = new MangaCore();
     core.readSavedData().then((void _) {
-      setState(() {
+      this.setState(() {
         this.coreInstance = core;
       });
     });
@@ -60,7 +60,7 @@ class ListPageState extends State<ListPage> {
               ),
             )
           : new Container(
-              child: ListView.builder(
+              child: new ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: this.coreInstance.appData["savedManga"].length,
@@ -149,7 +149,7 @@ class ListPageState extends State<ListPage> {
                           onTap: () {
                             this.coreInstance.untrackManga(
                                 this.coreInstance.appData["savedManga"][index]);
-                            setState(() {});
+                            this.setState(() {});
                           },
                         ),
                       ),
@@ -172,8 +172,9 @@ class ListPageState extends State<ListPage> {
                 Navigator.push(
                   context,
                   new MaterialPageRoute(
-                    builder: (context) =>
-                        new SearchPage(coreInstance: this.coreInstance),
+                    builder: (BuildContext context) {
+                      return new SearchPage(coreInstance: this.coreInstance);
+                    },
                   ),
                 );
               },

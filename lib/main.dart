@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:manga_tracker/app.dart';
 
-void main() => runApp(new MangaTracker());
+void main() {
+  return runApp(new MangaTracker());
+}
 
 class MangaTracker extends StatelessWidget {
   @override
