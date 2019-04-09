@@ -108,60 +108,34 @@ class ListPageState extends State<ListPage> {
                             new Container(
                               padding: const EdgeInsets.only(top: 20.0),
                             ),
-                            new FutureBuilder<dynamic>(
+                            new Builder(
                               key: new Key(
                                 this.coreInstance.appData["savedManga"][index],
                               ),
-                              future: this.coreInstance.getLatestChapter(
-                                    this.coreInstance.searchManga(this
-                                        .coreInstance
-                                        .appData["savedManga"][index])[0]["i"],
-                                  ),
-                              builder: (
-                                BuildContext context,
-                                AsyncSnapshot<dynamic> snapshot,
-                              ) {
-                                int releaseDateMS = (this
-                                            .coreInstance
-                                            .searchManga(this
-                                                    .coreInstance
-                                                    .appData["savedManga"]
-                                                [index])[0]["ld"] *
-                                        1000)
-                                    .toInt();
+                              builder: (BuildContext context) {
+                                String title = this
+                                    .coreInstance
+                                    .appData["savedManga"][index];
 
-                                DateTime releaseDateTime =
+                                double lastUpdateTS = this
+                                    .coreInstance
+                                    .searchManga(title)[0]["ld"];
+
+                                DateTime lastUpdateDate =
                                     new DateTime.fromMillisecondsSinceEpoch(
-                                  releaseDateMS,
+                                  lastUpdateTS ~/ 1 * 1000,
                                 );
 
-                                String releaseDateReadable =
+                                String lastUpdateDateReadable =
                                     new DateFormat("MMMM d, y")
-                                        .format(releaseDateTime);
+                                        .format(lastUpdateDate);
 
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.waiting:
-                                    return new Text(
-                                      "Chapter ...",
-                                      style: new TextStyle(
-                                        color: Colors.yellowAccent,
-                                      ),
-                                    );
-                                  default:
-                                    return snapshot.hasData
-                                        ? new Text(
-                                            "Chapter ${snapshot.data}",
-                                            style: new TextStyle(
-                                              color: Colors.yellowAccent,
-                                            ),
-                                          )
-                                        : new Text(
-                                            "$releaseDateReadable",
-                                            style: new TextStyle(
-                                              color: Colors.yellowAccent,
-                                            ),
-                                          );
-                                }
+                                return new Text(
+                                  "Updated on $lastUpdateDateReadable",
+                                  style: new TextStyle(
+                                    color: Colors.yellowAccent,
+                                  ),
+                                );
                               },
                             ),
                           ],

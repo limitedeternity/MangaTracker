@@ -56,8 +56,10 @@ class MangaCore {
   }
 
   Future<void> trackManga(String title) async {
-    this.appData["savedManga"].add(title);
-    this.saveData();
+    if (!this.appData["savedManga"].contains(title)) {
+      this.appData["savedManga"].add(title);
+      this.saveData();
+    }
   }
 
   Future<void> untrackManga(String title) async {
@@ -77,17 +79,5 @@ class MangaCore {
               .contains(query.toLowerCase().trim()),
         )
         .toList();
-  }
-
-  Future<dynamic> getLatestChapter(String mangaId) async {
-    final response =
-        await http.get("https://www.mangaeden.com/api/manga/$mangaId");
-
-    if (response.statusCode == 200) {
-      final json = convert.jsonDecode(response.body);
-      return json["chapters"][0][0];
-    } else {
-      return null;
-    }
   }
 }
