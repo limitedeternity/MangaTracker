@@ -127,7 +127,7 @@ class ListPageState extends State<ListPage> {
                                 );
 
                                 String lastUpdateDateReadable =
-                                    new DateFormat("MMMM d, y")
+                                    new DateFormat("MMM d, y")
                                         .format(lastUpdateDate);
 
                                 return new Text(
