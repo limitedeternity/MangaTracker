@@ -26,29 +26,31 @@ class MangaCore {
     await this.saveData();
   }
 
-  Future<void> readSavedData() async {
+  Future<void> loadData() async {
     File dataFile = await this.getDataFileLocation();
     bool dataFileExists = await dataFile.exists();
 
-    if (!dataFileExists) {
+    if (dataFileExists) {
+      String data = await dataFile.readAsString();
+      this.appData = Map<String, List<dynamic>>.from(convert.jsonDecode(data));
+    } else {
       await this.createDataFile();
-      await this.fetchMangaUpdate();
-      return;
     }
 
-    String data = await dataFile.readAsString();
-    this.appData = Map<String, List<dynamic>>.from(convert.jsonDecode(data));
-
-    try {
-      await this.fetchMangaUpdate();
-    } catch (e) {
-      return;
-    }
+    await this.fetchMangaUpdate();
   }
 
   Future<void> fetchMangaUpdate() async {
-    http.Response response =
-        await http.get("https://www.mangaeden.com/api/list/0/");
+    http.Response response;
+
+    while (true) {
+      try {
+        response = await http.get("https://www.mangaeden.com/api/list/0/");
+        break;
+      } catch (e) {
+        await new Future.delayed(const Duration(seconds: 2));
+      }
+    }
 
     if (response.statusCode == 200) {
       final json = convert.jsonDecode(response.body);

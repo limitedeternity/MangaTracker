@@ -1,10 +1,12 @@
 # MangaTracker
 
-> Track manga chapters
+> Track manga updates
 
 ## Why?
 
 Because I haven't found any app to accomplish this task.
+
+Note that you need an active Internet connection to use this app.
 
 ## Meta
 

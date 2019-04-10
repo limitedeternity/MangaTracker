@@ -16,7 +16,7 @@ class ListPageState extends State<ListPage> {
     super.initState();
 
     MangaCore core = new MangaCore();
-    core.readSavedData().then((void _) {
+    core.loadData().then((void _) {
       this.setState(() {
         this.coreInstance = core;
       });
