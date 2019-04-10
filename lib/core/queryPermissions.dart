@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:async' show Future;
 import 'package:permission/permission.dart';
 
 Future<void> queryPermissions() async {
@@ -11,10 +11,11 @@ Future<void> queryPermissions() async {
     bool allGranted = permissionsStatus.every(
         (Permissions perm) => perm.permissionStatus == PermissionStatus.allow);
 
-    if (!allGranted) {
-      await Permission.requestPermissions(perms);
-    } else {
+    if (allGranted) {
       break;
     }
+
+    await Permission.requestPermissions(perms);
+    await new Future.delayed(const Duration(milliseconds: 300));
   }
 }

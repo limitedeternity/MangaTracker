@@ -1,7 +1,7 @@
-import 'dart:async';
-import 'dart:io';
-import 'dart:convert' as convert;
-import 'package:http/http.dart' as http;
+import 'dart:async' show Future;
+import 'dart:io' show File, Directory;
+import 'dart:convert' show jsonDecode, jsonEncode;
+import 'package:http/http.dart' as http show get, Response;
 import 'package:path_provider/path_provider.dart';
 
 class MangaCore {
@@ -32,7 +32,7 @@ class MangaCore {
 
     if (dataFileExists) {
       String data = await dataFile.readAsString();
-      this.appData = Map<String, List<dynamic>>.from(convert.jsonDecode(data));
+      this.appData = Map<String, List<dynamic>>.from(jsonDecode(data));
     } else {
       await this.createDataFile();
     }
@@ -53,7 +53,7 @@ class MangaCore {
     }
 
     if (response.statusCode == 200) {
-      final json = convert.jsonDecode(response.body);
+      final json = jsonDecode(response.body);
       this.appData["mangaList"] = json["manga"];
       this.saveData();
     }
@@ -61,7 +61,7 @@ class MangaCore {
 
   Future<void> saveData() async {
     File dataFile = await this.getDataFileLocation();
-    await dataFile.writeAsString(convert.jsonEncode(this.appData));
+    await dataFile.writeAsString(jsonEncode(this.appData));
   }
 
   Future<void> trackManga(String title) async {
