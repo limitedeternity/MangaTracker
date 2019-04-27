@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart'
+    show WebviewScaffold;
 import 'package:manga_tracker/core/mangaCore.dart';
 import 'package:manga_tracker/pages/searchPage.dart';
 
@@ -90,10 +92,39 @@ class ListPageState extends State<ListPage> {
                               ),
                             ),
                           ),
-                          child: const Icon(
-                            Icons.library_books,
-                            color: Colors.white,
-                            size: 30.0,
+                          child: new InkWell(
+                            child: const Icon(
+                              Icons.library_books,
+                              color: Colors.white,
+                              size: 30.0,
+                            ),
+                            onTap: () {
+                              String title = this
+                                  .coreInstance
+                                  .appData["savedManga"][index];
+
+                              String id =
+                                  this.coreInstance.searchManga(title)[0]["a"];
+
+                              Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return new WebviewScaffold(
+                                      url:
+                                          "https://www.mangaeden.com/en/en-manga/$id/",
+                                      appBar: new AppBar(
+                                        backgroundColor: Colors.white,
+                                        title: new Center(
+                                          child: const Text(""),
+                                        ),
+                                      ),
+                                      clearCache: true,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
                           ),
                         ),
                         title: new Text(

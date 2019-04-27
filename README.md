@@ -1,10 +1,10 @@
 # MangaTracker
 
-> Track manga updates
+> MangaEden Client
 
 ## Why?
 
-Because I haven't found any app to accomplish this task.
+Because there is none.
 
 Note that you need an active Internet connection to use this app.
 
