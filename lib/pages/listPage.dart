@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:flutter_list_drag_and_drop/drag_and_drop_list.dart'
+    show DragAndDropList;
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart'
     show WebviewScaffold;
+
 import 'package:manga_tracker/core/mangaCore.dart';
 import 'package:manga_tracker/pages/searchPage.dart';
 
@@ -62,11 +65,9 @@ class ListPageState extends State<ListPage> {
               ),
             )
           : new Container(
-              child: new ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: this.coreInstance.appData["savedManga"].length,
-                itemBuilder: (BuildContext context, int index) {
+              child: new DragAndDropList<String>(
+                new List<String>.from(this.coreInstance.appData["savedManga"]),
+                itemBuilder: (BuildContext context, String title) {
                   return new Card(
                     elevation: 8.0,
                     margin: const EdgeInsets.symmetric(
@@ -99,10 +100,6 @@ class ListPageState extends State<ListPage> {
                               size: 30.0,
                             ),
                             onTap: () {
-                              String title = this
-                                  .coreInstance
-                                  .appData["savedManga"][index];
-
                               String id =
                                   this.coreInstance.searchManga(title)[0]["a"];
 
@@ -114,7 +111,12 @@ class ListPageState extends State<ListPage> {
                                       url:
                                           "https://www.mangaeden.com/en/en-manga/$id/",
                                       appBar: new AppBar(
-                                        backgroundColor: Colors.white,
+                                        elevation: 0.1,
+                                        backgroundColor:
+                                            Color.fromRGBO(58, 66, 86, 1.0),
+                                        iconTheme: new IconThemeData(
+                                          color: Colors.white,
+                                        ),
                                         title: new Center(
                                           child: const Text(""),
                                         ),
@@ -128,7 +130,7 @@ class ListPageState extends State<ListPage> {
                           ),
                         ),
                         title: new Text(
-                          this.coreInstance.appData["savedManga"][index],
+                          title,
                           style: new TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -141,13 +143,9 @@ class ListPageState extends State<ListPage> {
                             ),
                             new Builder(
                               key: new Key(
-                                this.coreInstance.appData["savedManga"][index],
+                                title,
                               ),
                               builder: (BuildContext context) {
-                                String title = this
-                                    .coreInstance
-                                    .appData["savedManga"][index];
-
                                 double lastUpdateTS = this
                                     .coreInstance
                                     .searchManga(title)[0]["ld"];
@@ -178,8 +176,7 @@ class ListPageState extends State<ListPage> {
                             size: 30.0,
                           ),
                           onTap: () {
-                            this.coreInstance.untrackManga(
-                                this.coreInstance.appData["savedManga"][index]);
+                            this.coreInstance.untrackManga(title);
                             this.setState(() {});
                           },
                         ),
@@ -187,6 +184,12 @@ class ListPageState extends State<ListPage> {
                     ),
                   );
                 },
+                onDragFinish: (int before, int after) {
+                  this.coreInstance.reorderManga(before, after);
+                  this.setState(() {});
+                },
+                canBeDraggedTo: (int one, int two) => true,
+                dragElevation: 8.0,
               ),
             ),
       floatingActionButton: this.coreInstance == null
@@ -207,7 +210,9 @@ class ListPageState extends State<ListPage> {
                       return new SearchPage(coreInstance: this.coreInstance);
                     },
                   ),
-                );
+                ).then((dynamic titleWasAdded) {
+                  if (titleWasAdded == true) this.setState(() {});
+                });
               },
               child: const Icon(
                 Icons.add,

@@ -1,5 +1,7 @@
 PODS:
   - Flutter (1.0.0)
+  - flutter_webview_plugin (0.0.1):
+    - Flutter
   - path_provider (0.0.1):
     - Flutter
   - permission (0.0.1):
@@ -7,12 +9,15 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `.symlinks/flutter/ios-release`)
+  - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission (from `.symlinks/plugins/permission/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: ".symlinks/flutter/ios-release"
+  flutter_webview_plugin:
+    :path: ".symlinks/plugins/flutter_webview_plugin/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   permission:
@@ -20,6 +25,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
+  flutter_webview_plugin: ed9e8a6a96baf0c867e90e1bce2673913eeac694
   path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
   permission: 51e2d3a8ef3490da0537667d7f1a6a1c5ba8ec47
 

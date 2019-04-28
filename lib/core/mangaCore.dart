@@ -32,7 +32,7 @@ class MangaCore {
 
     if (dataFileExists) {
       String data = await dataFile.readAsString();
-      this.appData = Map<String, List<dynamic>>.from(jsonDecode(data));
+      this.appData = new Map<String, List<dynamic>>.from(jsonDecode(data));
     } else {
       await this.createDataFile();
     }
@@ -64,18 +64,28 @@ class MangaCore {
     await dataFile.writeAsString(jsonEncode(this.appData));
   }
 
-  Future<void> trackManga(String title) async {
+  void trackManga(String title) {
     if (!this.appData["savedManga"].contains(title)) {
-      this.appData["savedManga"].add(title);
+      this.appData["savedManga"].insert(0, title);
       this.saveData();
     }
   }
 
-  Future<void> untrackManga(String title) async {
+  void untrackManga(String title) {
     this.appData["savedManga"] =
         this.appData["savedManga"].where((entry) => entry != title).toList();
 
     this.saveData();
+  }
+
+  void reorderManga(int before, int after) {
+    if (before != after) {
+      String title = this.appData["savedManga"][before];
+
+      this.appData["savedManga"].removeAt(before);
+      this.appData["savedManga"].insert(after, title);
+      this.saveData();
+    }
   }
 
   List<dynamic> searchManga(String query) {

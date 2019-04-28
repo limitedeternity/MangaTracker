@@ -38,9 +38,8 @@ class SearchPageState extends State<SearchPage> {
           return materialResult;
         },
         onSelect: (dynamic selected) {
-          this.widget.coreInstance.trackManga(selected).then((void _) {
-            Navigator.pop(context);
-          });
+          this.widget.coreInstance.trackManga(selected);
+          Navigator.pop(context, true);
         },
       ),
     );
