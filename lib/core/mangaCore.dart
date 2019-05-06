@@ -68,6 +68,8 @@ class MangaCore {
     if (!this.appData["savedManga"].contains(title)) {
       this.appData["savedManga"].insert(0, title);
       this.saveData();
+    } else {
+      reorderManga(this.appData["savedManga"].indexOf(title), 0);
     }
   }
 
