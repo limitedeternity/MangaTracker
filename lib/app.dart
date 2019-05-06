@@ -26,10 +26,10 @@ class ApplicationState extends State<Application> {
     return this.permissionsGranted
         ? new ListPage()
         : new Scaffold(
-            backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+            backgroundColor: new Color.fromRGBO(58, 66, 86, 1.0),
             appBar: new AppBar(
               elevation: 0.1,
-              backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+              backgroundColor: new Color.fromRGBO(58, 66, 86, 1.0),
               title: new Center(
                 child: const Text(""),
               ),

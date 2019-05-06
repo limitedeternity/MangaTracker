@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:flutter_list_drag_and_drop/drag_and_drop_list.dart'
     show DragAndDropList;
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart'
-    show WebviewScaffold;
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as WebView
+    show launch, CustomTabsOption, CustomTabsAnimation;
 
 import 'package:manga_tracker/core/mangaCore.dart';
 import 'package:manga_tracker/pages/searchPage.dart';
@@ -31,10 +31,10 @@ class ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+      backgroundColor: new Color.fromRGBO(58, 66, 86, 1.0),
       appBar: new AppBar(
         elevation: 0.1,
-        backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+        backgroundColor: new Color.fromRGBO(58, 66, 86, 1.0),
         title: new Center(
           child: const Text(
             "MangaTracker",
@@ -69,6 +69,9 @@ class ListPageState extends State<ListPage> {
                 new List<String>.from(this.coreInstance.appData["savedManga"]),
                 itemBuilder: (BuildContext context, String title) {
                   return new Card(
+                    key: new Key(
+                      title,
+                    ),
                     elevation: 8.0,
                     margin: const EdgeInsets.symmetric(
                       horizontal: 10.0,
@@ -76,7 +79,7 @@ class ListPageState extends State<ListPage> {
                     ),
                     child: new Container(
                       decoration: new BoxDecoration(
-                        color: Color.fromRGBO(64, 75, 96, .9),
+                        color: Color.fromRGBO(64, 75, 96, 0.9),
                       ),
                       child: new ListTile(
                         contentPadding: const EdgeInsets.symmetric(
@@ -103,29 +106,28 @@ class ListPageState extends State<ListPage> {
                               String id =
                                   this.coreInstance.searchManga(title)[0]["a"];
 
-                              Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                    return new WebviewScaffold(
-                                      url:
-                                          "https://www.mangaeden.com/en/en-manga/$id/",
-                                      appBar: new AppBar(
-                                        elevation: 0.1,
-                                        backgroundColor:
-                                            Color.fromRGBO(58, 66, 86, 1.0),
-                                        iconTheme: new IconThemeData(
-                                          color: Colors.white,
-                                        ),
-                                        title: new Center(
-                                          child: const Text(""),
-                                        ),
-                                      ),
-                                      clearCache: true,
-                                    );
-                                  },
-                                ),
-                              );
+                              try {
+                                WebView.launch(
+                                  "https://www.mangaeden.com/en/en-manga/$id/",
+                                  option: new WebView.CustomTabsOption(
+                                    toolbarColor:
+                                        new Color.fromRGBO(58, 66, 86, 1.0),
+                                    enableDefaultShare: true,
+                                    enableUrlBarHiding: true,
+                                    showPageTitle: true,
+                                    animation: new WebView.CustomTabsAnimation(
+                                      startEnter: 'slide_up',
+                                      startExit: 'android:anim/fade_out',
+                                      endEnter: 'android:anim/fade_in',
+                                      endExit: 'slide_down',
+                                    ),
+                                    extraCustomTabs: <String>[
+                                      'org.mozilla.firefox',
+                                      'com.microsoft.emmx',
+                                    ],
+                                  ),
+                                );
+                              } catch (e) {}
                             },
                           ),
                         ),
@@ -142,9 +144,6 @@ class ListPageState extends State<ListPage> {
                               padding: const EdgeInsets.only(top: 20.0),
                             ),
                             new Builder(
-                              key: new Key(
-                                title,
-                              ),
                               builder: (BuildContext context) {
                                 double lastUpdateTS = this
                                     .coreInstance
