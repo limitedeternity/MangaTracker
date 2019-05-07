@@ -79,7 +79,7 @@ class ListPageState extends State<ListPage> {
                     ),
                     child: new Container(
                       decoration: new BoxDecoration(
-                        color: Color.fromRGBO(64, 75, 96, 0.9),
+                        color: new Color.fromRGBO(64, 75, 96, 0.9),
                       ),
                       child: new ListTile(
                         contentPadding: const EdgeInsets.symmetric(
