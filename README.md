@@ -8,6 +8,10 @@ Because there is none.
 
 Note that you need an active Internet connection to use this app.
 
+## Screenshot
+
+![](https://user-images.githubusercontent.com/24318966/57986272-7d1b0680-7a7b-11e9-8c3a-904fb81e8720.png)
+
 ## Meta
 
 Marise Hayashi – [Other projects](https://limitedeternity.github.io/)
