@@ -149,21 +149,30 @@ class ListPageState extends State<ListPage> {
                                     .coreInstance
                                     .searchManga(title)[0]["ld"];
 
-                                DateTime lastUpdateDate =
-                                    new DateTime.fromMillisecondsSinceEpoch(
-                                  lastUpdateTS ~/ 1 * 1000,
-                                );
+                                if (lastUpdateTS != null) {
+                                  DateTime lastUpdateDate =
+                                      new DateTime.fromMillisecondsSinceEpoch(
+                                    lastUpdateTS ~/ 1 * 1000,
+                                  );
 
-                                String lastUpdateDateReadable =
-                                    new DateFormat("MMM d, y")
-                                        .format(lastUpdateDate);
+                                  String lastUpdateDateReadable =
+                                      new DateFormat("MMM d, y")
+                                          .format(lastUpdateDate);
 
-                                return new Text(
-                                  "Updated on $lastUpdateDateReadable",
-                                  style: new TextStyle(
-                                    color: Colors.yellowAccent,
-                                  ),
-                                );
+                                  return new Text(
+                                    "Updated on $lastUpdateDateReadable",
+                                    style: new TextStyle(
+                                      color: Colors.yellowAccent,
+                                    ),
+                                  );
+                                } else {
+                                  return new Text(
+                                    "Updated on ???",
+                                    style: new TextStyle(
+                                      color: Colors.yellowAccent,
+                                    ),
+                                  );
+                                }
                               },
                             ),
                           ],
