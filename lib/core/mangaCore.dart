@@ -83,9 +83,12 @@ class MangaCore {
   void reorderManga(int before, int after) {
     if (before != after) {
       String title = this.appData["savedManga"][before];
+      int insertAt = this.appData["savedManga"].length <= after
+          ? this.appData["savedManga"].length - 1
+          : after < 0 ? 0 : after;
 
       this.appData["savedManga"].removeAt(before);
-      this.appData["savedManga"].insert(after, title);
+      this.appData["savedManga"].insert(insertAt, title);
       this.saveData();
     }
   }
