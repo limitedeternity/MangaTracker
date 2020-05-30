@@ -132,6 +132,9 @@ class ListPageState extends State<ListPage> {
                           ),
                           title: new Text(
                             title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
                             style: new TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
